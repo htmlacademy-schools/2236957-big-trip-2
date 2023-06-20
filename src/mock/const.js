@@ -103,7 +103,6 @@ const shipOffers = [{
   title: 'Add alcohol',
   price: 250
 }];
-
 const driveOffers = [{
   id: 8,
   title: 'Upgrade a car',
