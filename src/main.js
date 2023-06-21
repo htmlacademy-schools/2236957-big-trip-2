@@ -1,5 +1,5 @@
 import FilterView from './view/filter-view';
-import {render} from './render.js';
+import {render} from './framework/render.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import TripPointModel from './model/trip-point-model.js';
 import { mockInit, tripPoints } from './mock/point.js';
@@ -10,4 +10,3 @@ const tripPointsModel = new TripPointModel(tripPoints);
 const boardPresenter = new BoardPresenter({boardContainer: pageContainer, tripPointsModel});
 render(new FilterView(), siteFilterElement);
 boardPresenter.init();
-//module3-task2
