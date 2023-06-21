@@ -1,23 +1,21 @@
-import { capitalizeType } from '../utils/utils.js';
+import { capitalizeType, getItemFromItemsById } from '../utils/utils.js';
 import { convertToEventDateTime, convertToEventDate, convertToDateTime, convertToTime } from '../utils/formatTime-Utils.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import { getOffersByType } from '../utils/offers.js';
 
-const getOfferById = (id, type) => (getOffersByType(type)
-  .find((offer) => offer.id === id));
 
-function createOffersTemplate(offersIDs, type) {
-  return offersIDs.map((offerID) => {
-    const offer = getOfferById(offerID, type);
-    return `<li class="event__offer">
-        <span class="event__offer-title">${offer.title}</span>
-         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </li>`;
-  }).join('');
+function createOffersTemplate(offers, offersIDs, type) {
+  const currentTypeOffers = offers.find((el) => el.type === type).offers;
+  return currentTypeOffers.filter((el) => offersIDs.includes(el.id)).map((offer) => `
+    <li class="event__offer">
+      <span class="event__offer-title">${offer.title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer.price}</span>
+    </li>`
+  ).join('');
 }
 
-function createTripPointTemplate(tripPoint, destination) {
+function createTripPointTemplate(tripPoint, destinations, offers) {
+  const destination = getItemFromItemsById(destinations, tripPoint.destination);
   return (
     `<li class="trip-events__item">
     <div class="event">
@@ -38,7 +36,7 @@ function createTripPointTemplate(tripPoint, destination) {
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${createOffersTemplate(tripPoint.offersIDs, tripPoint.type)}
+        ${createOffersTemplate(offers, tripPoint.offersIDs, tripPoint.type)}
       </ul>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
@@ -50,12 +48,14 @@ function createTripPointTemplate(tripPoint, destination) {
 
 export default class TripPointView extends AbstractView {
   #tripPoint = null;
-  #destination = null;
+  #destinations = null;
+  #offers = null;
 
-  constructor({tripPoint, destination, onEditClick}) {
+  constructor({tripPoint, destinations, offers, onEditClick}) {
     super();
     this.#tripPoint = tripPoint;
-    this.#destination = destination;
+    this.#destinations = destinations;
+    this.#offers = offers;
     this._callback.onEditClick = onEditClick;
 
     this.element.querySelector('.event__rollup-btn')
@@ -63,7 +63,7 @@ export default class TripPointView extends AbstractView {
   }
 
   get template() {
-    return createTripPointTemplate(this.#tripPoint, this.#destination);
+    return createTripPointTemplate(this.#tripPoint, this.#destinations, this.#offers);
   }
 
   #editClickHandler = (evt) => {

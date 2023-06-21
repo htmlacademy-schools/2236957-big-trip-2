@@ -16,7 +16,8 @@ export default class TripPointPresenter {
   #tripPointComponent = null;
 
   #tripPoint = null;
-  #destination = null;
+  #destinations = null;
+  #offers = null;
   #mode = Mode.DEFAULT;
 
   constructor({tripPointList, onModeChange}) {
@@ -24,22 +25,25 @@ export default class TripPointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(tripPoint, destination) {
+  init(tripPoint, destinations, offers) {
     this.#tripPoint = tripPoint;
-    this.#destination = destination;
+    this.#destinations = destinations;
+    this.#offers = offers;
 
     const prevTripPointComponent = this.#tripPointComponent;
     const prevEditFormComponent = this.#editFormComponent;
 
     this.#tripPointComponent = new TripPointView({
       tripPoint: this.#tripPoint,
-      destination: this.#destination,
+      destinations: this.#destinations,
+      offers: this.#offers,
       onEditClick: this.#handleEditClick
     });
 
     this.#editFormComponent = new EditFormView({
       tripPoint: this.#tripPoint,
-      destination: this.#destination,
+      destinations: this.#destinations,
+      offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit
     });
 
@@ -67,6 +71,7 @@ export default class TripPointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#editFormComponent.reset(this.#tripPoint);
       this.#replaceFormToPoint();
     }
   }
@@ -85,6 +90,7 @@ export default class TripPointPresenter {
   #ecsKeyDownHandler = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
+      this.#editFormComponent.reset(this.#tripPoint);
       this.#replaceFormToPoint();
       document.body.removeEventListener('keydown', this.#ecsKeyDownHandler);
     }
@@ -94,6 +100,7 @@ export default class TripPointPresenter {
   #handleEditClick = () => {
     this.#replacePointToForm();
     document.body.addEventListener('keydown', this.#ecsKeyDownHandler);
+    this.#editFormComponent.reset(this.#tripPoint);
   };
 
   #handleFormSubmit = () => {
