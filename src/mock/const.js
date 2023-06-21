@@ -1,7 +1,6 @@
 const pointTypes = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 
-
 const descriptionPhrases = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'Cras aliquet varius magna, non porta ligula feugiat eget.',
   'Fusce tristique felis at fermentum pharetra.', 'Aliquam id orci ut lectus varius viverra.', 'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
@@ -103,6 +102,7 @@ const shipOffers = [{
   title: 'Add alcohol',
   price: 250
 }];
+
 const driveOffers = [{
   id: 8,
   title: 'Upgrade a car',
@@ -185,6 +185,40 @@ const offersByType = [
   },
 ];
 
-const getOffersByType = (type) => offersByType.find((currentTypeOffers) => currentTypeOffers.type === type).offers;
+const getOffersByType = (type) => {
+  switch (type) {
+    case 'taxi':
+      return taxiOffers;
+    case 'bus':
+      return busOffers;
+    case 'train':
+      return trainOffers;
+    case 'ship':
+      return shipOffers;
+    case 'drive':
+      return driveOffers;
+    case 'flight':
+      return flightOffers;
+    case 'check-in':
+      return checkInOffers;
+    case 'sightseeing':
+      return sightseeingOffers;
+    case 'restaurant':
+      return restaurantOffers;
+  }
+};
 
-export { pointTypes, descriptionPhrases, namesOfPlaces, fromToDates, getOffersByType, offersByType};
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future'
+};
+
+const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers'
+};
+
+export { pointTypes, descriptionPhrases, namesOfPlaces, fromToDates, getOffersByType, offersByType, FilterType, SortType};
