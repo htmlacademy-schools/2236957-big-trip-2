@@ -62,14 +62,15 @@ export default class BoardPresenter {
   }
 
   #handleSortTypeChange = (sortType) => {
-    
+    // - сортируем задачи
     if (this.#currentSortType === sortType) {
       return;
     }
 
     this.#sortTripPoints(sortType);
 
-   
+    // - очищаем список
+    // - рисуем ему заново
     this.#clearTripPointList();
     this.#renderTripPoints();
   };
@@ -108,6 +109,6 @@ export default class BoardPresenter {
   #clearTripPointList() {
     this.#tripPointPresenter.forEach((presenter) => presenter.destroy());
     this.#tripPointPresenter.clear();
-    
+    //remove(this.#sortComponent);
   }
 }
